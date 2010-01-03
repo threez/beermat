@@ -1,1 +1,3 @@
 .DS_Store
+mkmf.log
+log/sinatra.log 
