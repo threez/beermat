@@ -5,7 +5,7 @@ require 'yaml'
 Sinatra::Application.set :run => false, 
                          :environment => :production
 
-global_password = YAML.load(File.read("db/config.yaml"))["Passwort"]
+global_password = YAML.load(::File.read("db/config.yaml"))["Passwort"]
 
 log = File.new("log/sinatra.log", "a")
 log.sync = true
