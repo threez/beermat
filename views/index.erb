@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>BeerManager</title>
+		
+		<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Manages beer consume of symbol-group members" />
+		<meta name="author" content="vincentlandgraf" />
+		<meta name="keywords" content="beer manager consume protocol" />
+		<meta name="date" content="2009-12-31T21:52:49+0100" />
+		<meta http-equiv="Content-language" content="de" />
+		
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script src="jquery.js"></script>
+		<script src="application.js"></script>
+	</head>
+	<body>
+  	<div id="container">
+  	  <div id="global_beer_status" 
+           style="background-image: url(images/beer_<%= @drinks_percentage %>.png)">
+  	    <div class="status">
+  	      <div class="percent"><%= "%0.2f" % @drinks_percent %> %</div>
+  	      <div class="value"><%= "%0.2f" % @drinks_value %> Euro</div>
+        </div>
+  	  </div>
+  	  <div id="drinks">
+				<% for drink in @drinks %>
+				<% if drink.quantity > 0 %>
+				<a class="drink" href="#<%= drink.ref_id %>">
+				<% else %>
+				<div class="drink">
+				<% end %>
+				  <div class="photo" style="background: url(<%= drink.photo %>)"></div>
+				  <div class="data <%= drink.warning_css %>">
+				  	<div class="status">
+				      <div class="volume"><%= drink.volume %></div>
+				      <div class="value"><%= "%0.2f" % drink.value %> Euro</div>
+				      <div class="drink_name"><%= drink.name %></div>
+				    </div>
+				  </div>
+				<% if drink.quantity > 0 %>
+				</a>
+				<% else %>
+				</div>
+				<% end %>
+				<% end %>
+				<div class="clear"></div>
+  	  </div>
+			<div id="people">
+				<table border="0" cellspacing="5" cellpadding="5">
+					<tr>
+						<th></th>
+						<% @drinks.each_with_index do |drink, i| %>
+							<% if i % 2 == 0 %>
+								<th class="col"><%= drink.ref_id %></th>
+							<% else %>
+								<th><%= drink.ref_id %></th>
+							<% end %>
+						<% end %>
+						<th class="col">Versoffen</th>
+					</tr>
+					<% for person in @people.sort { |x, y| y.payday <=> x.payday } %>
+					<tr class="person">
+						<td class="identity">
+							<a href="#<%= person.ref_id %>">
+								<img src="<%= person.photo %>">
+								<span class="person_name"><%= person.name %></span>
+							</a>
+						</td>
+						<% @drinks.each_with_index do |drink, i| %>
+							<% if i % 2 == 0 %>
+								<td class="num col"><%= person[drink].sum %></td>
+							<% else %>
+								<td class="num"><%= person[drink].sum %></td>
+							<% end %>
+						<% end %>
+						<td class="price col">
+							<%= "%0.2f" % person.payday %> Euro
+						</td>
+					</tr>
+					<% end %>
+				</table>
+			</div>
+  	  <div class="clear"></div>
+  	</div>
+  </body>
+</html>

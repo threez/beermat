@@ -1,0 +1,129 @@
+!dark_gray_border = "1px solid #333"
+!corners = 10px
+
+=shadow-text
+  color: white
+  font-size: 1.4em
+  text-align: center
+  text-shadow: 2px 2px 2px black
+
+*
+  padding: 0px
+  margin: 0px
+  
+a
+  text-decoration: none
+  color: #333
+  
+a:active
+  font-style: italic
+
+body
+  background: repeat-x #545454 url(images/background.png)
+  font-family: Verdana
+  padding: 20px
+  color: #333
+
+#container  
+  background: #FFF
+  margin: 0 auto
+  width = 626px + 282px - 37px + 10px
+  padding: 10px 0px 10px 10px
+  -webkit-border-radius = !corners
+  -moz-border-radius = !corners
+  -webkit-box-shadow: 3px 3px 3px black
+  -moz-box-shadow: 3px 3px 3px black
+
+  #global_beer_status
+    float: left
+    background-position: -35px -0px
+    height: 692px
+    width = 282px - 37px
+
+    .status
+      text-align: center
+      font-size: 1.4em
+      padding-top: 600px
+
+  #drinks
+    height: 340px
+    width: 626px
+    float: left
+
+    .drink 
+      width: 303px
+      float: left
+      display: block
+      margin-bottom: 14px
+      padding-left: 10px
+
+      .photo 
+        float: left
+        -webkit-border-top-left-radius = !corners
+        -moz-border-radius-topleft = !corners
+        -webkit-border-bottom-left-radius = !corners
+        -moz-border-radius-bottomleft = !corners
+        height: 150px
+        width: 100px
+        background-repeat: no-repeat
+        border = !dark_gray_border
+ 
+      .data 
+        float: left
+        -webkit-border-top-right-radius = !corners
+        -moz-border-radius-topright = !corners
+        -webkit-border-bottom-right-radius = !corners
+        -moz-border-radius-bottomright = !corners
+        height: 150px
+        width: 200px
+        border = !dark_gray_border
+        background: #545454
+        border-left: 0px
+        
+      .warning_yellow .status div.volume
+        color: yellow
+        
+      .warning_red .status div.volume
+        color: red
+
+      .status
+        +shadow-text
+        padding-top: 10px
+        
+        .drink_name
+          padding-top: 10px
+  
+  #people
+    width: 614px
+    float: left
+    border = !dark_gray_border
+    margin-left: 10px
+    -webkit-border-radius = !corners
+    -moz-border-radius = !corners
+    
+    table
+      width: 100%
+    
+      td.num
+        text-align: center
+        
+      td.price
+        text-align: right
+        
+      .col
+        background: #efefef
+        
+      tr.person
+        td.identity
+          text-align: center
+          width: 80px
+      
+          img
+            height: 70px
+            border: 0px
+      
+          .person_name
+            display: block
+
+.clear 
+  clear: both

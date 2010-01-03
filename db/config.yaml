@@ -1,0 +1,49 @@
+---
+Einheiten:
+  cl: 10
+  l: 1000
+Personen:
+  Raphael:
+    ID: RL
+    Photo: http://www.symbol-group.com/images/uhr.jpg
+  Hebel:
+    ID: H1
+  Moritz:
+    ID: M1
+  Jonas:
+    ID: J1
+    Eingeladen-von: Raphael
+Getraenke:
+  Oettinger Export:
+    ID: OE
+    Preis: 0.50
+    Menge-pro-Einheit: 0.5l
+    Maximale-Menge: 120
+    Warnung-gelb: 20
+    Warnung-rot: 10
+    Photo: images/oettinger_export.png
+  Franziskaner Hefe-Weizen:
+    ID: FW
+    Preis: 1
+    Menge-pro-Einheit: 0.5l
+    Maximale-Menge: 40
+    Warnung-gelb: 10
+    Warnung-rot: 5
+    Photo: images/franziskaner.png
+  Krombacher Hefe-Weizen:
+    ID: KW
+    Preis: 1
+    Menge-pro-Einheit: 0.5l
+    Maximale-Menge: 40
+    Warnung-gelb: 10
+    Warnung-rot: 5
+    Photo: images/krombacher.jpg
+  Brinkhoffs Pilsener:
+    ID: BP
+    Preis: 0.75
+    Menge-pro-Einheit: 0.33l
+    Maximale-Menge: 40
+    Warnung-gelb: 14
+    Warnung-rot: 8
+    Photo: images/brinkhoffs.png
+Passwort: mosbar
