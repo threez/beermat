@@ -181,7 +181,7 @@ module BeerManager
     end
     
     def load_config(path)
-      file_content = File.read(path)
+      file_content = ::File.read(path)
       hash = YAML.load(file_content)
       @people, @drinks, @units = [], [], {}
       
@@ -204,14 +204,14 @@ module BeerManager
     end
     
     def load_stock(stock_path, drinks)
-      stock = YAML.load(File.read(stock_path))
+      stock = YAML.load(::File.read(stock_path))
       for drink in drinks
         drink.quantity = stock[drink.ref_id]
       end
     end
     
     def load_protocol(protocol_path, people, drinks)
-      File.open(protocol_path, "r") do |file|
+      ::File.open(protocol_path, "r") do |file|
         while !file.eof?
           # read one protocol
           person_id = file.read 2 # 2 bytes user id 
@@ -225,7 +225,7 @@ module BeerManager
           drink = find_drink_by_id(drink_id)
           person.add_protocol(year, drink, days)
         end
-      end if File.exist? protocol_path
+      end if ::File.exist? protocol_path
     end
     
     def find_person_by_id(id)
@@ -250,13 +250,13 @@ module BeerManager
         hash[DRINKS][drink.name] = drink.to_hash
       end        
       
-      File.open(path, "w") do |file|
+      ::File.open(path, "w") do |file|
         file.write(YAML.dump(hash))
       end
     end
     
     def save_stock(stock_path)
-      File.open(stock_path, "w") do |file|
+      ::File.open(stock_path, "w") do |file|
         hash = {}
         
         for drink in drinks
@@ -268,7 +268,7 @@ module BeerManager
     end
     
     def save_protocol(protocol_path)
-      File.open(protocol_path, "w") do |file|
+      ::File.open(protocol_path, "w") do |file|
         @people.each do |person|
           person.protocols.each do |protocol|
             file.write(person.ref_id)
