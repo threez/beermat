@@ -7,7 +7,7 @@ Sinatra::Application.set :run => false,
 
 global_password = YAML.load(::File.read("db/config.yaml"))["Passwort"]
 
-log = ::File.new("log/sinatra.log", "a")
+log = ::File.open("log/sinatra.log", "a")
 log.sync = true
 $stdout.reopen(log)
 $stderr.reopen(log)
