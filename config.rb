@@ -66,9 +66,13 @@ module BeerManager
     end
     
     def payday
-      @protocols[current_year].map do |protocol|
-        protocol.sum * protocol.drink.price
-      end.inject(0) { |i, d| i += d }
+      if @protocols[current_year]
+        return @protocols[current_year].map do |protocol|
+          protocol.sum * protocol.drink.price
+        end.inject(0) { |i, d| i += d }
+      else
+        return 0.0
+      end
     end
     
     def add_drink_at(time, drink)
