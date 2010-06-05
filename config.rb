@@ -4,6 +4,7 @@ require "time"
 module BeerManager
   class Protocol
     DAYS = 365
+    DAY = 24 * 60 * 60
     attr_accessor :year, :days, :drink
     
     def initialize(year, drink, days)
@@ -21,6 +22,17 @@ module BeerManager
     
     def []=(day, new_value)
       @days[day] = new_value
+    end
+    
+    def date(day)
+      Time.gm(@year) + day * DAY
+    end
+    
+    def merge(protocol)
+      DAYS.times do |day|
+        #puts "day #{date(day)}: #{self[day]} + #{protocol[day]} = #{self[day] + protocol[day]}"
+        self[day] += protocol[day]
+      end
     end
     
     def sum
@@ -62,7 +74,8 @@ module BeerManager
     end
     
     def protocol_for_drink(year, drink)
-      @protocols[year].find { |d| d.drink == drink }
+      return nil if @protocols[year].nil?
+      @protocols[year].find { |d| d.drink.ref_id == drink.ref_id }
     end
     
     def payday
@@ -95,6 +108,11 @@ module BeerManager
     def add_protocol(year, drink, days)
       @protocols[year] = [] unless @protocols[year]
       @protocols[year] << Protocol.new(year, drink, days)
+    end
+    
+    def <<(protocol)
+      @protocols[protocol.year] = [] unless @protocols[protocol.year]
+      @protocols[protocol.year] << protocol
     end
   
     def to_hash
@@ -171,11 +189,16 @@ module BeerManager
     
     attr_reader :people, :drinks
     
-    def initialize(config_path, stock_path, protocol_path)
+    def initialize(config_path, stock_path, protocol_path, do_refresh = true)
       @config_path = config_path
       @stock_path = stock_path
       @protocol_path = protocol_path
-      refresh!
+      if do_refresh
+        refresh!
+      else
+        @people = []
+        @drinks = []
+      end
     end
     
     def refresh!
@@ -240,6 +263,12 @@ module BeerManager
       drinks.find { |d| d.ref_id == id }
     end
     
+    def save!
+      save_config(@config_path)
+      save_stock(@stock_path)
+      save_protocol(@protocol_path)
+    end
+    
     def save_config(path)
       hash = {
         UNITS => @units,
@@ -295,6 +324,52 @@ module BeerManager
       drink = find_drink_by_id(drink_id)
       drink.quantity -= 1
       person.add_drink_at(Time.now, drink)
+    end
+    
+    def merge(database)
+    merge_drinks(database)
+      merge_people(database)
+    end
+    
+    def merge_people(database)
+      for person in database.people do
+        if found_person = find_person_by_id(person.ref_id)
+          puts "  merge person #{person.name}..."
+          for protocol in person.protocols do
+            if protocol_found = found_person.protocol_for_drink(protocol.year, protocol.drink)
+              puts "    merge protocol #{protocol.year} for '#{protocol.drink.name}'..."
+              protocol_found.merge(protocol)
+            else
+              puts "    add protocol #{protocol.year} for '#{protocol.drink.name}'..."
+              found_person << protocol
+            end
+          end
+        else
+          puts "  add person #{person.name}..."
+          for protocol in person.protocols do
+            puts "     add protocol #{protocol.year} for '#{protocol.drink.name}'..."
+          end
+          @people << person
+        end
+      end
+    end
+    
+    def merge_drinks(database)
+      for drink in database.drinks do
+        if find_drink_by_id(drink.ref_id).nil?
+          puts "  add drink #{drink.name}..."
+          @drinks << drink
+        end
+      end
+    end
+    
+    def self.merge(config_path, stock_path, protocol_path, *databases)
+      merged_database = Database.new(config_path, stock_path, protocol_path, false)
+      for database in databases do
+        puts "merge database..."
+        merged_database.merge(database)
+      end
+      merged_database      
     end
   end
 end
