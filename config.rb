@@ -1,5 +1,6 @@
 require "yaml"
 require "time"
+require "logger"
 
 class Array
   def sum
@@ -8,6 +9,10 @@ class Array
 end
 
 module BeerManager
+  def self.log
+    @log ||= ::Logger.new(STDOUT)
+  end
+  
   class Protocol
     DAYS = 365
     DAY = 24 * 60 * 60
@@ -36,7 +41,9 @@ module BeerManager
     
     def merge(protocol)
       DAYS.times do |day|
-        #puts "day #{date(day)}: #{self[day]} + #{protocol[day]} = #{self[day] + protocol[day]}"
+        if protocol[day] > 0
+          BeerManager.log.info "      add day #{date(day)}: #{self[day]} + #{protocol[day]} = #{self[day] + protocol[day]}"
+        end
         self[day] += protocol[day]
       end
     end
@@ -220,6 +227,7 @@ module BeerManager
     end
     
     def load_config(path)
+      BeerManager.log.info "load config #{path}"
       file_content = ::File.read(path)
       hash = YAML.load(file_content)
       @people, @drinks, @units = [], [], {}
@@ -243,6 +251,7 @@ module BeerManager
     end
     
     def load_stock(stock_path, drinks)
+      BeerManager.log.info "load stock #{stock_path}"
       stock = YAML.load(::File.read(stock_path))
       for drink in drinks
         drink.quantity = stock[drink.ref_id]
@@ -250,6 +259,7 @@ module BeerManager
     end
     
     def load_protocol(protocol_path, people, drinks)
+      BeerManager.log.info "load protocol #{protocol_path}"
       ::File.open(protocol_path, "r") do |file|
         while !file.eof?
           # read one protocol
@@ -276,12 +286,14 @@ module BeerManager
     end
     
     def save!
+      BeerManager.log.info "save config, stock and protocols"
       save_config(@config_path)
       save_stock(@stock_path)
       save_protocol(@protocol_path)
     end
     
     def save_config(path)
+      BeerManager.log.info "save config #{path}"
       hash = {
         UNITS => @units,
         PASSWD => @passwd,
@@ -301,6 +313,7 @@ module BeerManager
     end
     
     def save_stock(stock_path)
+      BeerManager.log.info "save stock #{stock_path}"
       ::File.open(stock_path, "w") do |file|
         hash = {}
         
@@ -313,6 +326,7 @@ module BeerManager
     end
     
     def save_protocol(protocol_path)
+      BeerManager.log.info "save protocol #{protocol_path}"
       ::File.open(protocol_path, "w") do |file|
         @people.each do |person|
           person.protocols.each do |protocol|
@@ -327,6 +341,7 @@ module BeerManager
     end
     
     def save_changed_stock_and_protocol(stock_path, protocol_path)
+      BeerManager.log.info "save stock and protocols"
       save_stock(stock_path)
       save_protocol(protocol_path)
     end
@@ -334,32 +349,33 @@ module BeerManager
     def add_drink_for(person_id, drink_id)
       person = find_person_by_id(person_id)
       drink = find_drink_by_id(drink_id)
+      BeerManager.log.info "add drink #{drink.name} for #{person.name}"
       drink.quantity -= 1
       person.add_drink_at(Time.now, drink)
     end
     
     def merge(database)
-    merge_drinks(database)
+      merge_drinks(database)
       merge_people(database)
     end
     
     def merge_people(database)
       for person in database.people do
         if found_person = find_person_by_id(person.ref_id)
-          puts "  merge person #{person.name}..."
+          BeerManager.log.info "  merge person #{person.name}..."
           for protocol in person.protocols do
             if protocol_found = found_person.protocol_for_drink(protocol.year, protocol.drink)
-              puts "    merge protocol #{protocol.year} for '#{protocol.drink.name}'..."
+              BeerManager.log.info "    merge protocol #{protocol.year} for '#{protocol.drink.name}'..."
               protocol_found.merge(protocol)
             else
-              puts "    add protocol #{protocol.year} for '#{protocol.drink.name}'..."
+              BeerManager.log.info "    add protocol #{protocol.year} for '#{protocol.drink.name}'..."
               found_person << protocol
             end
           end
         else
-          puts "  add person #{person.name}..."
+          BeerManager.log.info "  add person #{person.name}..."
           for protocol in person.protocols do
-            puts "     add protocol #{protocol.year} for '#{protocol.drink.name}'..."
+            BeerManager.log.info "     add protocol #{protocol.year} for '#{protocol.drink.name}'..."
           end
           @people << person
         end
@@ -369,7 +385,7 @@ module BeerManager
     def merge_drinks(database)
       for drink in database.drinks do
         if find_drink_by_id(drink.ref_id).nil?
-          puts "  add drink #{drink.name}..."
+          BeerManager.log.info "  add drink #{drink.name}..."
           @drinks << drink
         end
       end
@@ -378,7 +394,7 @@ module BeerManager
     def self.merge(config_path, stock_path, protocol_path, *databases)
       merged_database = Database.new(config_path, stock_path, protocol_path, false)
       for database in databases do
-        puts "merge database..."
+        BeerManager.log.info "merge database..."
         merged_database.merge(database)
       end
       merged_database      
