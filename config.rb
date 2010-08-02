@@ -1,6 +1,12 @@
 require "yaml"
 require "time"
 
+class Array
+  def sum
+    inject(0) { |i, d| i += d }
+  end
+end
+
 module BeerManager
   class Protocol
     DAYS = 365
@@ -36,7 +42,7 @@ module BeerManager
     end
     
     def sum
-      days.inject(0) { |i, d| i += d }
+      days.sum
     end
   end
   
@@ -82,7 +88,7 @@ module BeerManager
       if @protocols[current_year]
         return @protocols[current_year].map do |protocol|
           protocol.sum * protocol.drink.price
-        end.inject(0) { |i, d| i += d }
+        end.sum
       else
         return 0.0
       end
@@ -153,6 +159,12 @@ module BeerManager
     def volume
       if quantity_per_unit =~ /(\d+.\d+)(\w+)/ 
         "%0.2f#{$2}" % [$1.to_f * quantity]
+      end
+    end
+    
+    def liter
+      if quantity_per_unit =~ /(\d+.\d+)(\w+)/ 
+        $1.to_f
       end
     end
     
