@@ -35,7 +35,7 @@ get '/:person_id/protocol/:drink_id' do
 end
 
 get '/stats' do
-  @files_to_merge = Dir["#{DB_DIR}/**/*.dat"]
+  @files_to_merge = Dir["#{DB_DIR}/**/*.dat*"]
   erb :stats
 end
 
