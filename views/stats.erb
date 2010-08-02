@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>BeerManager</title>
+		
+		<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Manages beer consume of symbol-group members" />
+		<meta name="author" content="vincentlandgraf" />
+		<meta name="keywords" content="beer manager consume protocol" />
+		<meta name="date" content="2009-12-31T21:52:49+0100" />
+		<meta http-equiv="Content-language" content="de" />
+		
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script src="jquery.js"></script>
+		<script src="application.js"></script>
+	</head>
+	<body>
+  	<div id="container">
+  	  <h1>Dateien au f&uuml;r den Export</h1>
+  	    
+  	  <form action="/stats.csv" method="post">
+  	    <% for file in @files_to_merge do %>
+  	    <p>
+  	      <input type="checkbox" name="files[]" value="<%= file %>"
+  	             id="<%= file.object_id %>">
+  	      <label for="<%= file.object_id %>"><%= file %></label>
+  	    </p>
+  	    <% end %>
+  	    
+  	    <input type="submit">
+  	  </form>
+  	</div>
+  </div>
+</div>

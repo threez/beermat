@@ -26,7 +26,7 @@ module BeerManager
       csv = ""
       csv << "Name;Bier;Datum;Anzahl;Preis;Liter;Eingeladen von\n"
       day_sec = 60 * 60 * 24 # one day
-      for person in db.people do
+      for person in people do
         for protocol in person.protocols do
           first_date = Time.gm(protocol.year, 1, 1)
           for day in protocol.days do

@@ -227,7 +227,7 @@ module BeerManager
     end
     
     def load_config(path)
-      BeerManager.log.info "load config #{path}"
+      BeerManager.log.info "load config #{path}..."
       file_content = ::File.read(path)
       hash = YAML.load(file_content)
       @people, @drinks, @units = [], [], {}
@@ -248,18 +248,20 @@ module BeerManager
             @passwd = value
         end
       end
+      BeerManager.log.info "load config done"
     end
     
     def load_stock(stock_path, drinks)
-      BeerManager.log.info "load stock #{stock_path}"
+      BeerManager.log.info "load stock #{stock_path}..."
       stock = YAML.load(::File.read(stock_path))
       for drink in drinks
         drink.quantity = stock[drink.ref_id]
       end
+      BeerManager.log.info "load stock done"
     end
     
     def load_protocol(protocol_path, people, drinks)
-      BeerManager.log.info "load protocol #{protocol_path}"
+      BeerManager.log.info "load protocol #{protocol_path}..."
       ::File.open(protocol_path, "r") do |file|
         while !file.eof?
           # read one protocol
@@ -275,6 +277,7 @@ module BeerManager
           person.add_protocol(year, drink, days)
         end
       end if ::File.exist? protocol_path
+      BeerManager.log.info "load protocol done"
     end
     
     def find_person_by_id(id)
@@ -286,14 +289,15 @@ module BeerManager
     end
     
     def save!
-      BeerManager.log.info "save config, stock and protocols"
+      BeerManager.log.info "save config, stock and protocols..."
       save_config(@config_path)
       save_stock(@stock_path)
       save_protocol(@protocol_path)
+      BeerManager.log.info "save config, stock and protocols done"
     end
     
     def save_config(path)
-      BeerManager.log.info "save config #{path}"
+      BeerManager.log.info "save config #{path}..."
       hash = {
         UNITS => @units,
         PASSWD => @passwd,
@@ -310,10 +314,11 @@ module BeerManager
       ::File.open(path, "w") do |file|
         file.write(YAML.dump(hash))
       end
+      BeerManager.log.info "save config done"
     end
     
     def save_stock(stock_path)
-      BeerManager.log.info "save stock #{stock_path}"
+      BeerManager.log.info "save stock #{stock_path}..."
       ::File.open(stock_path, "w") do |file|
         hash = {}
         
@@ -323,10 +328,11 @@ module BeerManager
         
         file.write(YAML.dump(hash))
       end
+      BeerManager.log.info "save stock done"
     end
     
     def save_protocol(protocol_path)
-      BeerManager.log.info "save protocol #{protocol_path}"
+      BeerManager.log.info "save protocol #{protocol_path}..."
       ::File.open(protocol_path, "w") do |file|
         @people.each do |person|
           person.protocols.each do |protocol|
@@ -338,12 +344,14 @@ module BeerManager
           end
         end
       end
+      BeerManager.log.info "save protocol done"
     end
     
     def save_changed_stock_and_protocol(stock_path, protocol_path)
-      BeerManager.log.info "save stock and protocols"
+      BeerManager.log.info "save stock and protocols..."
       save_stock(stock_path)
       save_protocol(protocol_path)
+      BeerManager.log.info "save stock and protocols done"
     end
     
     def add_drink_for(person_id, drink_id)
