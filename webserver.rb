@@ -22,7 +22,8 @@ get "/" do
   @drinks_value = @drinks.inject(0) { |i, d| i += d.value }
   
   @drinks_percent = @drink_quantity.to_f / @drink_max_quantity.to_f * 100
-  @drinks_percentage = (@drinks_percent - (@drinks_percent % 5)).to_i
+  @drinks_percentage = @drinks_percent.nan? ? 0 : 
+                       (@drinks_percent - (@drinks_percent % 5)).to_i
   
   erb :index
 end
