@@ -1,0 +1,6 @@
+name: "Duff Beer 0,5l"
+price: 1
+capacity: 0.5l
+picture_url: http://images.org/duff.png
+warning_red: 10
+warning_yellow: 5
