@@ -4,7 +4,7 @@ This is a database and a website for managing the consume of any type of liquids
 
 ## Installation
 
-This application is compatible with **rack** and various versions of ruby. I don't know of any incompatibilities.
+This application is compatible with **rack** and various versions of **ruby**. I don't know of any incompatibilities.
 
 ### Installing the application
 
@@ -25,7 +25,7 @@ If you use [Phusion Passenger](http://www.modrails.com/index.html) you just have
     use Rack::Auth::Basic do |username, password|
       username == '' && password == "secret"
     end
-    run Beermat::Web :db => "/var/beermat"
+    run Beermat::Web :db => "/db"
 
 ## Database
 
