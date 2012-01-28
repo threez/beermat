@@ -15,17 +15,18 @@ This application is compatible with **rack** and various versions of **ruby**. I
 If you use [Phusion Passenger](http://www.modrails.com/index.html) you just have to put the following **config.ru** rack configuration file.
 
     require 'rubygems'
-    require 'bundler'
-
-    Bundler.require
-
     require 'beermat'
+    
+    DB_PATH = "/db"
+    PASSWD = "secret"
     
     # use a basic auth to save the beermat from unauthorized access
     use Rack::Auth::Basic do |username, password|
-      username == '' && password == "secret"
+      password == PASSWD
     end
-    run Beermat::Web :db => "/db"
+    
+    # start the application
+    run Beermat::Application.new(:db => DB_PATH)
 
 ## Database
 
