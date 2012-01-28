@@ -1,3 +1,4 @@
 .DS_Store
-mkmf.log
-log/sinatra.log 
+pkg/*
+*.gem
+.bundle
