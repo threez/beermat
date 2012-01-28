@@ -1,4 +1,4 @@
-# Beermat (COMMING SOON: TRAVIS CI ICON)
+# Beermat ![Travis CI Status](https://secure.travis-ci.org/threez/beermat.png "Travis CI Status")
 
 This is a database and a website for managing the consume of any type of liquids in a group. I made this system on my brothers request for managing his groups consume of beer and shots.
 
