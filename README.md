@@ -63,7 +63,7 @@ A drink is a drinkable liquid. It can be consumed once. It is necessary to choos
 
 The file contains data about a drink. Here is an example:
 
-    name: "Duff Beer 0,5l"
+    name: Duff Beer 0,5l
     price: 1
     capacity: 0.5l
     warning_red: 5
